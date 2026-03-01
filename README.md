@@ -138,6 +138,61 @@ La siguiente imagen fue generada automáticamente durante el stage
 
 ![Matriz de Confusión](artifacts/confusion_matrix.png)
 
+## 📌 Interpretación de la Matriz de Confusión
+
+La siguiente matriz resume el desempeño del modelo sobre el conjunto de prueba:
+
+|                | Predicción ≤ 50K | Predicción > 50K |
+|---------------|------------------|------------------|
+| **Real ≤ 50K** | 6921             | 510              |
+| **Real > 50K** | 936              | 1402             |
+
+---
+
+### 🔍 Análisis de los Resultados
+
+- **Verdaderos Negativos (6921):**  
+  El modelo clasifica correctamente la mayoría de las personas cuyo ingreso es ≤ $50K.
+
+- **Falsos Positivos (510):**  
+  Personas con ingresos ≤ $50K que fueron clasificadas incorrectamente como > $50K.
+
+- **Falsos Negativos (936):**  
+  Personas con ingresos > $50K que el modelo no logró identificar correctamente.
+
+- **Verdaderos Positivos (1402):**  
+  Casos correctamente clasificados como ingresos > $50K.
+
+---
+
+### 📊 Métricas Derivadas
+
+A partir de la matriz se pueden calcular métricas clave:
+
+- **Precisión (clase >50K):**  
+  1402 / (1402 + 510) ≈ **0.73**
+
+- **Recall (clase >50K):**  
+  1402 / (1402 + 936) ≈ **0.60**
+
+- **Accuracy global:**  
+  (6921 + 1402) / Total ≈ **0.85**
+
+---
+
+### 🎯 Conclusiones Técnicas
+
+1. El modelo presenta un **alto desempeño en la clase mayoritaria (≤50K)**.
+2. La clase de ingresos superiores a $50K resulta más compleja de identificar, debido al **desbalance natural del dataset**.
+3. Se observa una mayor cantidad de falsos negativos (936) que falsos positivos (510), lo que indica que el modelo tiende a ser conservador al predecir ingresos altos.
+4. El desempeño general es sólido, pero podría mejorarse incrementando el recall de la clase >50K mediante:
+   - Ajuste del umbral de decisión.
+   - Técnicas de balanceo de clases (SMOTE).
+   - Optimización de hiperparámetros.
+   - Evaluación de modelos alternativos más complejos.
+
+En términos generales, el modelo logra un equilibrio adecuado entre precisión y generalización, manteniendo una **accuracy cercana al 85%**, lo cual es competitivo para este tipo de problema.
+
 ------------------------------------------------------------------------
 
 # 🗂️ Estructura del Proyecto
@@ -219,6 +274,7 @@ Esto permite:
 -   joblib
 -   DVC
 -   ucimlrepo
+-   git
 
 ------------------------------------------------------------------------
 
@@ -241,7 +297,6 @@ Esto permite:
 -   Modelos más complejos (XGBoost, Random Forest)
 -   Balanceo de clases (SMOTE)
 -   Implementación de CI/CD
--   Monitoreo de data drift
 
 ------------------------------------------------------------------------
 
