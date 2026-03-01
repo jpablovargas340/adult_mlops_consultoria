@@ -11,14 +11,26 @@ venv/
 # MLflow
 mlruns/
 
-# No versionar datos ni modelos en Git
+# No versionar datos grandes ni modelos en Git
 data/*
-artifacts/*
 models/*
 
-# Mantener estructura
+# Ignorar artifacts por defecto...
+artifacts/*
+
+# ...pero permitir métricas y reportes (livianos)
+!artifacts/.gitkeep
+!artifacts/ingest_summary.json
+!artifacts/validation_report.json
+!artifacts/metrics.json
+!artifacts/classification_report.json
+!artifacts/eval_metrics.json
+!artifacts/confusion_matrix.png
+
+# Mantener estructura data
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/interim/.gitkeep
-!artifacts/.gitkeep
+
+# Mantener estructura models
 !models/.gitkeep

@@ -1,0 +1,38 @@
+{
+  "n_rows": 48842,
+  "n_features": 14,
+  "columns": {
+    "expected_match_order": true,
+    "missing": [],
+    "extra": []
+  },
+  "null_percentage": {
+    "age": 0.0,
+    "workclass": 0.019717,
+    "fnlwgt": 0.0,
+    "education": 0.0,
+    "education-num": 0.0,
+    "marital-status": 0.0,
+    "occupation": 0.019778,
+    "relationship": 0.0,
+    "race": 0.0,
+    "sex": 0.0,
+    "capital-gain": 0.0,
+    "capital-loss": 0.0,
+    "hours-per-week": 0.0,
+    "native-country": 0.00561
+  },
+  "duplicates": 53,
+  "numeric_checks": {
+    "age_in_range_17_90": true,
+    "education_num_in_range_1_16": true,
+    "hours_per_week_in_range_1_99": true
+  },
+  "target_distribution": {
+    "<=50K": 24720,
+    "<=50K.": 12435,
+    ">50K": 7841,
+    ">50K.": 3846
+  },
+  "status": "PASS"
+}
