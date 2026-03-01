@@ -1,35 +1,63 @@
-# 🧠 Adult Income Prediction --- MLOps Project
+# 🧠 Predicción de Ingresos --- Pipeline MLOps Reproducible (Adult Dataset)
 
-Proyecto académico de **MLOps Nivel 1** utilizando el dataset **Adult
-(UCI ML Repository)** para predecir si una persona gana más de 50K USD
-anuales, basado en variables demográficas y laborales.
-
-------------------------------------------------------------------------
-
-## 📊 1. Objetivo del Proyecto
-
-Construir un pipeline reproducible de Machine Learning que:
-
--   Descargue automáticamente el dataset desde UCI.
--   Valide la calidad de los datos.
--   Realice feature engineering.
--   Entrene un modelo de clasificación.
--   Evalúe su desempeño.
--   Genere artefactos versionados.
--   Permita reproducibilidad total con `dvc repro`.
-
-Este proyecto implementa prácticas de **MLOps Nivel 1**: -
-Modularización del código - Versionamiento de datos con DVC - Separación
-clara entre datos, artefactos y código - Pipeline automatizado
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-ML-orange)
+![DVC](https://img.shields.io/badge/DVC-Data%20Versioning-green)
+![Estado](https://img.shields.io/badge/Proyecto-Académico-success)
 
 ------------------------------------------------------------------------
 
-## 📁 2. Dataset
+# 📌 Descripción General
 
-Dataset: **Adult Income (UCI ML Repository)**\
-Registros: 48,842\
-Features: 14 variables\
-Clases: `<=50K`, `>50K`
+Este proyecto implementa un **pipeline completo de Machine Learning bajo
+prácticas MLOps Nivel 1**, utilizando el dataset **Adult (Census Income
+Dataset)** del UCI Machine Learning Repository.
+
+El objetivo principal no es únicamente entrenar un modelo, sino
+construir un sistema:
+
+-   Reproducible
+-   Modular
+-   Versionado
+-   Automatizado
+-   Trazable
+
+Todo el flujo puede ejecutarse con un solo comando:
+
+``` bash
+dvc repro
+```
+
+------------------------------------------------------------------------
+
+# 🎯 Objetivo del Modelo
+
+Predecir si el ingreso anual de una persona supera los **\$50,000 USD**,
+utilizando variables demográficas y laborales.
+
+Se trata de un problema de:
+
+-   **Clasificación supervisada binaria**
+-   Dataset con desbalance natural de clases
+
+Clases:
+
+  Clase   Descripción
+  ------- ------------------
+  0       Ingreso ≤ \$50K
+  1       Ingreso \> \$50K
+
+------------------------------------------------------------------------
+
+# 📊 Información del Dataset
+
+  Característica           Valor
+  ------------------------ ---------------------------------
+  Fuente                   UCI Machine Learning Repository
+  Registros                48,842
+  Variables                14
+  Tipo de problema         Clasificación binaria
+  Formato almacenamiento   Parquet
 
 Descarga automática mediante:
 
@@ -38,79 +66,81 @@ from ucimlrepo import fetch_ucirepo
 adult = fetch_ucirepo(id=2)
 ```
 
-Los datos se almacenan en formato **Parquet** para eficiencia y
-reproducibilidad.
-
 ------------------------------------------------------------------------
 
-## ⚙️ 3. Pipeline MLOps
+# ⚙️ Arquitectura del Pipeline MLOps
 
-Definido en `dvc.yaml`:
+Pipeline definido en `dvc.yaml`:
 
     ingest → validate → features → train → evaluate
 
-### 🔹 Ingest
+## 🔹 1️⃣ Ingesta
 
--   Descarga dataset
--   Guarda datos en `data/raw/` en formato Parquet
--   Genera `artifacts/ingest_summary.json`
+-   Descarga automática desde UCI
+-   Guarda datos en formato **Parquet**
+-   Genera resumen de datos
 
-### 🔹 Validate
+## 🔹 2️⃣ Validación
 
--   Verificación de estructura, nulos y rangos
--   Genera `artifacts/validation_report.json`
+-   Verificación de esquema
+-   Detección de nulos
+-   Control de duplicados
+-   Validación de rangos
 
-### 🔹 Features
+## 🔹 3️⃣ Feature Engineering
 
--   Limpieza de target y valores faltantes
--   Train/Test split estratificado
+-   Limpieza del target
+-   Tratamiento de valores faltantes
+-   Split estratificado
 -   Preprocesamiento:
     -   StandardScaler (numéricas)
     -   OneHotEncoder (categóricas)
--   Serializa `preprocessor.joblib`
--   Guarda datos procesados en Parquet
+-   Serialización del pipeline de transformación
 
-### 🔹 Train
+## 🔹 4️⃣ Entrenamiento
 
 Modelo utilizado:
 
-**Logistic Regression** - solver: saga - max_iter: 3000
+**Logistic Regression** - Solver: saga - max_iter: 3000
 
-Genera: - `models/model.pkl` - `artifacts/metrics.json` -
-`artifacts/classification_report.json`
+## 🔹 5️⃣ Evaluación
 
-### 🔹 Evaluate
-
--   Evaluación en conjunto de test
--   Genera:
-    -   `artifacts/eval_metrics.json`
-    -   `artifacts/confusion_matrix.png`
+-   Métricas sobre conjunto de test
+-   Generación automática de matriz de confusión
+-   Reporte reproducible
 
 ------------------------------------------------------------------------
 
-## 📈 4. Resultados del Modelo
+# 📈 Resultados del Modelo
+
+## 🔹 Métricas Globales
 
   Métrica    Valor
-  ---------- --------
-  Accuracy   \~85%
-  F1 Macro   \~0.78
+  ---------- -------
+  Accuracy   0.852
+  F1 Macro   0.783
 
-El modelo logra un buen balance considerando el desbalance natural del
-dataset.
+## 🔹 Interpretación
 
-------------------------------------------------------------------------
-
-## 🖼️ Matriz de Confusión
-
-La matriz de confusión se genera automáticamente en:
-
-    artifacts/confusion_matrix.png
-
-GitHub renderiza la imagen directamente.
+-   El modelo logra un desempeño sólido considerando el desbalance del
+    dataset.
+-   Se observa mejor capacidad para clasificar la clase mayoritaria
+    (≤50K).
+-   El F1 macro demuestra un equilibrio razonable entre precisión y
+    recall en ambas clases.
 
 ------------------------------------------------------------------------
 
-## 🗂️ 5. Estructura del Proyecto
+# 🖼️ Matriz de Confusión
+
+La siguiente imagen fue generada automáticamente durante el stage
+`evaluate`:
+
+![Matriz de Confusión](artifacts/confusion_matrix.png)
+
+------------------------------------------------------------------------
+
+# 🗂️ Estructura del Proyecto
 
     adult_mlops_consultoria/
     │
@@ -134,45 +164,53 @@ GitHub renderiza la imagen directamente.
 
 ------------------------------------------------------------------------
 
-## 🔁 6. Reproducibilidad
+# 🔁 Reproducibilidad
 
-### Crear entorno virtual
+## 1️⃣ Crear entorno virtual
 
 ``` bash
 python -m venv venv
 ```
 
+## 2️⃣ Activar entorno
+
 Windows:
 
-``` bash
-venv\Scripts\activate
-```
+    venv\Scripts\activate
 
-Instalar dependencias:
+## 3️⃣ Instalar dependencias
 
 ``` bash
 pip install -r requirements.txt
 ```
 
-Ejecutar pipeline:
+## 4️⃣ Ejecutar pipeline completo
 
 ``` bash
 dvc repro
 ```
 
-------------------------------------------------------------------------
-
-## 🧪 7. Versionamiento con DVC
-
--   Git versiona código y métricas.
--   DVC versiona datos y modelo.
--   `dvc.lock` contiene hashes reproducibles.
-
-Esto permite reproducibilidad total del pipeline.
+Este comando ejecuta automáticamente todas las etapas del pipeline.
 
 ------------------------------------------------------------------------
 
-## 🛠️ 8. Stack Tecnológico
+# 🧪 Estrategia de Versionamiento
+
+  Herramienta   Responsabilidad
+  ------------- --------------------------
+  Git           Código y métricas
+  DVC           Datos y modelo entrenado
+  dvc.lock      Hashes reproducibles
+
+Esto permite:
+
+-   Reproducibilidad total
+-   Trazabilidad de cambios
+-   Control de versiones de datos
+
+------------------------------------------------------------------------
+
+# 🛠️ Tecnologías Utilizadas
 
 -   Python
 -   pandas
@@ -184,8 +222,44 @@ Esto permite reproducibilidad total del pipeline.
 
 ------------------------------------------------------------------------
 
-## 👨‍💻 Autores
+# 📌 Conclusiones Técnicas
 
-Juan Pablo Vargas - Mildreth Diaz\
-Universidad Santo Tomás --- Facultad de Estadística\
-Proyecto académico MLOps
+1.  Se logró implementar un pipeline MLOps completamente automatizado.
+2.  El modelo alcanza un desempeño competitivo (\~85% accuracy).
+3.  La clase de ingresos altos presenta mayor dificultad debido al
+    desbalance.
+4.  La estructura modular permite sustituir el modelo sin alterar el
+    pipeline.
+5.  El uso de DVC garantiza reproducibilidad y versionamiento de datos.
+
+------------------------------------------------------------------------
+
+# 🚀 Posibles Mejoras Futuras
+
+-   Integración con MLflow
+-   Optimización de hiperparámetros
+-   Modelos más complejos (XGBoost, Random Forest)
+-   Balanceo de clases (SMOTE)
+-   Implementación de CI/CD
+-   Monitoreo de data drift
+
+------------------------------------------------------------------------
+
+# 🎓 Contexto Académico
+
+Proyecto desarrollado como ejercicio práctico de:
+
+-   Ingeniería de Machine Learning
+-   Automatización de pipelines
+-   Principios de MLOps
+-   Reproducibilidad científica
+
+------------------------------------------------------------------------
+
+# 👨‍💻 Autor
+
+Juan Pablo Vargas\
+Mildreth Diaz\
+Universidad Santo Tomás\
+Facultad de Estadística\
+Proyecto Académico MLOps
