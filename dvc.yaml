@@ -1,0 +1,31 @@
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    deps:
+      - src/ingest.py
+    outs:
+      - data/raw/features.parquet
+      - data/raw/targets.parquet
+    metrics:
+      - artifacts/ingest_summary.json
+
+  validate:
+    cmd: python -m src.validate
+    deps:
+      - src/validate.py
+      - data/raw/features.parquet
+      - data/raw/targets.parquet
+    metrics:
+      - artifacts/validation_report.json
+  features:
+    cmd: python -m src.features
+    deps:
+      - src/features.py
+      - data/raw/features.parquet
+      - data/raw/targets.parquet
+    outs:
+      - data/processed/X_train.parquet
+      - data/processed/X_test.parquet
+      - data/processed/y_train.parquet
+      - data/processed/y_test.parquet
+      - artifacts/preprocessor.joblib

@@ -1,0 +1,78 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    deps:
+    - path: src/ingest.py
+      hash: md5
+      md5: badffed003aa74037928f75f6dd0c762
+      size: 963
+    outs:
+    - path: artifacts/ingest_summary.json
+      hash: md5
+      md5: e53093d1acf4f128a678dea6699a0abc
+      size: 159
+    - path: data/raw/features.parquet
+      hash: md5
+      md5: ca468efec4f4e0dc28d5f66922a6f223
+      size: 514579
+    - path: data/raw/targets.parquet
+      hash: md5
+      md5: 43e008edc8559cdedd0fac348638dd12
+      size: 11179
+  validate:
+    cmd: python -m src.validate
+    deps:
+    - path: data/raw/features.parquet
+      hash: md5
+      md5: ca468efec4f4e0dc28d5f66922a6f223
+      size: 514579
+    - path: data/raw/targets.parquet
+      hash: md5
+      md5: 43e008edc8559cdedd0fac348638dd12
+      size: 11179
+    - path: src/validate.py
+      hash: md5
+      md5: b22fc6d06152b4f50ca201fd343be7b5
+      size: 2220
+    outs:
+    - path: artifacts/validation_report.json
+      hash: md5
+      md5: 0f8066e0235f87e5b260ba968af98226
+      size: 815
+  features:
+    cmd: python -m src.features
+    deps:
+    - path: data/raw/features.parquet
+      hash: md5
+      md5: ca468efec4f4e0dc28d5f66922a6f223
+      size: 514579
+    - path: data/raw/targets.parquet
+      hash: md5
+      md5: 43e008edc8559cdedd0fac348638dd12
+      size: 11179
+    - path: src/features.py
+      hash: md5
+      md5: 88c6f1136868b77ccfe80ddb87063bd4
+      size: 2691
+    outs:
+    - path: artifacts/preprocessor.joblib
+      hash: md5
+      md5: b1f54e1c49fe5a24f838a045eaeba2cf
+      size: 6618
+    - path: data/processed/X_test.parquet
+      hash: md5
+      md5: 3faf0a5cfdca68b2936566f73adc8557
+      size: 124232
+    - path: data/processed/X_train.parquet
+      hash: md5
+      md5: 3e35ca15c370bd60674fdcce48490878
+      size: 422414
+    - path: data/processed/y_test.parquet
+      hash: md5
+      md5: 6c6a784bb6e88c450fb5d819cc46566c
+      size: 3648
+    - path: data/processed/y_train.parquet
+      hash: md5
+      md5: b95763f6ae58d847c7a472a4f9326a5f
+      size: 11090
