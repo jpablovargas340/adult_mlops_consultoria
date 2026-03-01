@@ -48,6 +48,7 @@ def main(test_size: float = 0.2, random_state: int = 42) -> None:
 
     # y es DF de 1 col; normalizamos nombre de target a "income"
     y_series = y.squeeze()
+    y_series = y_series.astype(str).str.strip().str.replace(".", "", regex=False)
     y_series.name = TARGET_COL
 
     # Limpieza típica del Adult: strings con espacios y '?' como missing

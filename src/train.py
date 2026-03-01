@@ -5,52 +5,54 @@ import json
 import joblib
 import pandas as pd
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, accuracy_score, classification_report
 
 
+def _clean_target(y: pd.Series) -> pd.Series:
+    # Adult a veces trae espacios y/o punto final (<=50K.)
+    y = y.astype(str).str.strip()
+    y = y.str.replace(".", "", regex=False)  # quita punto final si existe
+    return y
+
+
 def main(random_state: int = 42) -> None:
-    # Cargar datos
     X_train = pd.read_parquet("data/processed/X_train.parquet")
     X_test = pd.read_parquet("data/processed/X_test.parquet")
     y_train = pd.read_parquet("data/processed/y_train.parquet").squeeze()
     y_test = pd.read_parquet("data/processed/y_test.parquet").squeeze()
 
-    # Cargar preprocesador
+    y_train = _clean_target(y_train)
+    y_test = _clean_target(y_test)
+
+    # Sanity check: asegurar 2 clases
+    classes = sorted(y_train.unique().tolist())
+    if len(classes) != 2:
+        raise ValueError(f"Target tiene {len(classes)} clases: {classes}")
+
     preprocessor = joblib.load("artifacts/preprocessor.joblib")
+    X_train_t = preprocessor.transform(X_train)
+    X_test_t = preprocessor.transform(X_test)
 
-    # Transformar
-    X_train_trans = preprocessor.transform(X_train)
-    X_test_trans = preprocessor.transform(X_test)
-
-    # Modelo
-    model = RandomForestClassifier(
-        n_estimators=200,
-        max_depth=None,
+    # Solver que funciona bien para binario y sparse (OneHot)
+    model = LogisticRegression(
+        solver="saga",
+        max_iter=3000,
         random_state=random_state,
-        n_jobs=-1,
     )
 
-    model.fit(X_train_trans, y_train)
-
-    # Evaluación
-    preds = model.predict(X_test_trans)
+    model.fit(X_train_t, y_train)
+    preds = model.predict(X_test_t)
 
     f1 = f1_score(y_test, preds, average="macro")
     acc = accuracy_score(y_test, preds)
-
     report = classification_report(y_test, preds, output_dict=True)
 
-    metrics = {
-        "f1_macro": float(f1),
-        "accuracy": float(acc),
-    }
+    metrics = {"f1_macro": float(f1), "accuracy": float(acc)}
 
-    # Guardar modelo
     Path("models").mkdir(exist_ok=True)
     joblib.dump(model, "models/model.pkl")
 
-    # Guardar métricas
     Path("artifacts").mkdir(exist_ok=True)
     with open("artifacts/metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)

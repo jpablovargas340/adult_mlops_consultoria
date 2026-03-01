@@ -53,62 +53,94 @@ stages:
       size: 11179
     - path: src/features.py
       hash: md5
-      md5: 88c6f1136868b77ccfe80ddb87063bd4
-      size: 2691
+      md5: 6ed520ecbe73de22f7005a4fccff51a4
+      size: 2774
     outs:
     - path: artifacts/preprocessor.joblib
       hash: md5
-      md5: b1f54e1c49fe5a24f838a045eaeba2cf
-      size: 6618
+      md5: bda37daf8020b44a5300b329b33b1e6e
+      size: 6620
     - path: data/processed/X_test.parquet
       hash: md5
-      md5: 3faf0a5cfdca68b2936566f73adc8557
-      size: 124232
+      md5: 6e4ee8362158e3c02d5a9b43a94cac90
+      size: 124309
     - path: data/processed/X_train.parquet
       hash: md5
-      md5: 3e35ca15c370bd60674fdcce48490878
-      size: 422414
+      md5: 8329ebc73992ac1b96282dcd0d913c41
+      size: 422326
     - path: data/processed/y_test.parquet
       hash: md5
-      md5: 6c6a784bb6e88c450fb5d819cc46566c
-      size: 3648
+      md5: 61f305f568f2e264bcd50454f2cd9d3c
+      size: 2595
     - path: data/processed/y_train.parquet
       hash: md5
-      md5: b95763f6ae58d847c7a472a4f9326a5f
-      size: 11090
+      md5: d9941f3886f95e20ef9ae6ee0ab82602
+      size: 6871
   train:
     cmd: python -m src.train
     deps:
     - path: artifacts/preprocessor.joblib
       hash: md5
-      md5: b1f54e1c49fe5a24f838a045eaeba2cf
-      size: 6618
+      md5: bda37daf8020b44a5300b329b33b1e6e
+      size: 6620
     - path: data/processed/X_test.parquet
       hash: md5
-      md5: 3faf0a5cfdca68b2936566f73adc8557
-      size: 124232
+      md5: 6e4ee8362158e3c02d5a9b43a94cac90
+      size: 124309
     - path: data/processed/X_train.parquet
       hash: md5
-      md5: 3e35ca15c370bd60674fdcce48490878
-      size: 422414
+      md5: 8329ebc73992ac1b96282dcd0d913c41
+      size: 422326
     - path: data/processed/y_test.parquet
       hash: md5
-      md5: 6c6a784bb6e88c450fb5d819cc46566c
-      size: 3648
+      md5: 61f305f568f2e264bcd50454f2cd9d3c
+      size: 2595
     - path: data/processed/y_train.parquet
       hash: md5
-      md5: b95763f6ae58d847c7a472a4f9326a5f
-      size: 11090
+      md5: d9941f3886f95e20ef9ae6ee0ab82602
+      size: 6871
     - path: src/train.py
       hash: md5
-      md5: 15e20e3f7c256b64ca9144cbde14d80d
-      size: 1758
+      md5: 293d38891146c0163809074a527fc98b
+      size: 2103
     outs:
     - path: artifacts/metrics.json
       hash: md5
-      md5: ef633a0ee3a37253fcd0f77619e2189e
-      size: 72
+      md5: bd7b338e07c51d610932c2990bbbf6df
+      size: 73
     - path: models/model.pkl
       hash: md5
-      md5: 9696bd9fb7fc29b66256213fc99cd03f
-      size: 599952217
+      md5: c661c857350be5ac4c25699b5b3a0e92
+      size: 1855
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+    - path: artifacts/preprocessor.joblib
+      hash: md5
+      md5: bda37daf8020b44a5300b329b33b1e6e
+      size: 6620
+    - path: data/processed/X_test.parquet
+      hash: md5
+      md5: 6e4ee8362158e3c02d5a9b43a94cac90
+      size: 124309
+    - path: data/processed/y_test.parquet
+      hash: md5
+      md5: 61f305f568f2e264bcd50454f2cd9d3c
+      size: 2595
+    - path: models/model.pkl
+      hash: md5
+      md5: c661c857350be5ac4c25699b5b3a0e92
+      size: 1855
+    - path: src/evaluate.py
+      hash: md5
+      md5: 270fa67222db5550d2a9f958dd5a4b62
+      size: 1426
+    outs:
+    - path: artifacts/confusion_matrix.png
+      hash: md5
+      md5: c0df44f94fe25750b4667e58c9419bb2
+      size: 27299
+    - path: artifacts/eval_metrics.json
+      hash: md5
+      md5: 81c6cb0e2c1157d18569f40e94eef716
+      size: 83
