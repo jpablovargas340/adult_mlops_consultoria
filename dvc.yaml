@@ -29,3 +29,16 @@ stages:
       - data/processed/y_train.parquet
       - data/processed/y_test.parquet
       - artifacts/preprocessor.joblib
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - data/processed/X_train.parquet
+      - data/processed/X_test.parquet
+      - data/processed/y_train.parquet
+      - data/processed/y_test.parquet
+      - artifacts/preprocessor.joblib
+    outs:
+      - models/model.pkl
+    metrics:
+      - artifacts/metrics.json
