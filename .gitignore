@@ -11,10 +11,6 @@ venv/
 # MLflow
 mlruns/
 
-# No versionar datos grandes ni modelos en Git
-data/*
-models/*
-
 # Ignorar artifacts por defecto...
 artifacts/*
 
